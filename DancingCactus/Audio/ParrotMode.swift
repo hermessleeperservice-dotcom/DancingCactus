@@ -5,36 +5,57 @@ import Observation
 @MainActor
 final class ParrotMode {
 
-    private(set) var isActive: Bool = false
+    private(set) var isActive:   Bool = false
     private(set) var isWiggling: Bool = false
 
-    private let pitchCents: Float = 600.0
-    private let silenceGap: TimeInterval = 0.3
+    private let pitchCents:    Float        = 600.0
+    private let silenceGap:    TimeInterval = 0.3
     private let windowDuration: TimeInterval = 1.0
-    private let rmsThreshold: Float = -30.0
+    private let rmsThreshold:  Float        = -30.0
 
-    private let engine = AVAudioEngine()
+    private let engine      = AVAudioEngine()
     private let pitchEffect = AVAudioUnitTimePitch()
-    private let playerNode = AVAudioPlayerNode()
+    private let playerNode  = AVAudioPlayerNode()
+    private var tapInstalled    = false
+    private var nodesConnected  = false
+    private var captureFormat:  AVAudioFormat?
 
     private var rollingBuffers: [AVAudioPCMBuffer] = []
     private var rollingSeconds: TimeInterval = 0
-    private var silenceStart: Date?
-    private var tapInstalled = false
-    private var isPlayingBack = false
+    private var silenceStart:   Date?
+    private var isPlayingBack   = false
 
     init() {
-        setupEngine()
+        engine.attach(playerNode)
+        engine.attach(pitchEffect)
+        pitchEffect.pitch = pitchCents
     }
+
+    // MARK: - Public
 
     func activate() {
         isActive = true
         do {
             try engine.start()
-            installTap()
         } catch {
-            print("ParrotMode start error: \(error)")
+            print("ParrotMode: engine start failed — \(error)")
+            return
         }
+
+        let hwFormat = engine.inputNode.outputFormat(forBus: 0)
+        guard hwFormat.sampleRate > 0, hwFormat.channelCount > 0 else {
+            print("ParrotMode: invalid input format, cannot install tap")
+            return
+        }
+        captureFormat = hwFormat
+
+        if !nodesConnected {
+            engine.connect(playerNode, to: pitchEffect,          format: hwFormat)
+            engine.connect(pitchEffect, to: engine.mainMixerNode, format: hwFormat)
+            nodesConnected = true
+        }
+
+        installTap(format: hwFormat)
     }
 
     func deactivate() {
@@ -42,37 +63,19 @@ final class ParrotMode {
         if engine.isRunning { engine.stop() }
         rollingBuffers = []
         rollingSeconds = 0
-        silenceStart = nil
-        isPlayingBack = false
-        isActive = false
-        isWiggling = false
+        silenceStart   = nil
+        isPlayingBack  = false
+        isActive       = false
+        isWiggling     = false
     }
 
-    private func setupEngine() {
-        let format = AVAudioFormat(
-            commonFormat: .pcmFormatFloat32,
-            sampleRate: 44100,
-            channels: 1,
-            interleaved: false
-        )!
-        engine.attach(playerNode)
-        engine.attach(pitchEffect)
-        engine.connect(playerNode, to: pitchEffect, format: format)
-        engine.connect(pitchEffect, to: engine.mainMixerNode, format: format)
-        pitchEffect.pitch = pitchCents
-    }
+    // MARK: - Tap
 
-    private func installTap() {
+    private func installTap(format: AVAudioFormat) {
         guard !tapInstalled else { return }
-        let inputNode = engine.inputNode
-        let fmt = inputNode.outputFormat(forBus: 0)
-        guard fmt.sampleRate > 0, fmt.channelCount > 0 else {
-            print("ParrotMode: invalid input format, skipping tap")
-            return
-        }
-        inputNode.installTap(onBus: 0, bufferSize: 1024, format: fmt) { [weak self] buf, _ in
+        engine.inputNode.installTap(onBus: 0, bufferSize: 2048, format: format) { [weak self] buf, _ in
             let rmsDB = buf.rmsDB()
-            let copy = buf.copy() as! AVAudioPCMBuffer
+            guard let copy = buf.safeCopy() else { return }
             let dur = Double(buf.frameLength) / buf.format.sampleRate
             Task { @MainActor [weak self] in
                 self?.process(rmsDB: rmsDB, buffer: copy, duration: dur)
@@ -86,6 +89,8 @@ final class ParrotMode {
         engine.inputNode.removeTap(onBus: 0)
         tapInstalled = false
     }
+
+    // MARK: - Processing
 
     private func process(rmsDB: Float, buffer: AVAudioPCMBuffer, duration: TimeInterval) {
         guard !isPlayingBack else { return }
@@ -110,19 +115,18 @@ final class ParrotMode {
     }
 
     private func triggerPlayback() {
-        guard !rollingBuffers.isEmpty else { return }
+        guard !rollingBuffers.isEmpty, let format = captureFormat else { return }
         isPlayingBack = true
         isWiggling = true
         removeTap()
 
-        let format = rollingBuffers[0].format
         guard let combined = mergeBuffers(rollingBuffers, format: format) else {
             finishPlayback()
             return
         }
         rollingBuffers = []
         rollingSeconds = 0
-        silenceStart = nil
+        silenceStart   = nil
 
         playerNode.scheduleBuffer(combined, at: nil, options: []) { [weak self] in
             Task { @MainActor [weak self] in self?.finishPlayback() }
@@ -136,7 +140,9 @@ final class ParrotMode {
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(0.3))
             self.isPlayingBack = false
-            self.installTap()
+            if let fmt = self.captureFormat {
+                self.installTap(format: fmt)
+            }
         }
     }
 }
@@ -147,7 +153,7 @@ private func mergeBuffers(_ buffers: [AVAudioPCMBuffer], format: AVAudioFormat) 
     for buf in buffers {
         guard let src = buf.floatChannelData, let dst = out.floatChannelData else { continue }
         let offset = Int(out.frameLength)
-        let count = Int(buf.frameLength)
+        let count  = Int(buf.frameLength)
         for ch in 0..<Int(format.channelCount) {
             memcpy(dst[ch] + offset, src[ch], count * MemoryLayout<Float>.size)
         }
