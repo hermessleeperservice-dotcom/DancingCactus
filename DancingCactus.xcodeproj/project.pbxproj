@@ -11,6 +11,7 @@
 		1730EBE980DFBBB44DAA4D5D /* VoiceListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7DA314C68E55AA45474873 /* VoiceListener.swift */; };
 		1C1A9641A57C6118319A23BD /* ControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF65D094FCE104E55B568571 /* ControlsView.swift */; };
 		2B729AF931C77B5DC5350A17 /* songs.json in Resources */ = {isa = PBXBuildFile; fileRef = 9B00DDBC3526F4E2762EDE96 /* songs.json */; };
+		3520CF24445AE778A68308AA /* VoiceStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C11E5C7D3E4E127A22764C9 /* VoiceStatusView.swift */; };
 		5553D0F1A99A9A85FEDE86BD /* song07.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 55FA8CDBD00F89585BD0A250 /* song07.mp3 */; };
 		5DC4775185A5CDFF6B83877C /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5AC4C3ED4E65CF099CC668 /* Song.swift */; };
 		5F273E96BC93536F3F9D7E07 /* song06.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 68930D0E1A69FFF7D7D34D5E /* song06.mp3 */; };
@@ -42,6 +43,7 @@
 		55C0CE1A6662223AE202B554 /* SongTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTitleView.swift; sourceTree = "<group>"; };
 		55FA8CDBD00F89585BD0A250 /* song07.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song07.mp3; sourceTree = "<group>"; };
 		68930D0E1A69FFF7D7D34D5E /* song06.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song06.mp3; sourceTree = "<group>"; };
+		6C11E5C7D3E4E127A22764C9 /* VoiceStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceStatusView.swift; sourceTree = "<group>"; };
 		70CA7C93BCEC675BC993E2C4 /* song01.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song01.mp3; sourceTree = "<group>"; };
 		7A0878324B8C4929C6375EED /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8F12B3588AB6C98E560018A0 /* DancingCactusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DancingCactusApp.swift; sourceTree = "<group>"; };
@@ -157,6 +159,7 @@
 				069EA4EA59F72612059A016C /* CactusView.swift */,
 				EF65D094FCE104E55B568571 /* ControlsView.swift */,
 				55C0CE1A6662223AE202B554 /* SongTitleView.swift */,
+				6C11E5C7D3E4E127A22764C9 /* VoiceStatusView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -248,6 +251,7 @@
 				5DC4775185A5CDFF6B83877C /* Song.swift in Sources */,
 				BECF76EC878C611B8BC4F8AD /* SongTitleView.swift in Sources */,
 				1730EBE980DFBBB44DAA4D5D /* VoiceListener.swift in Sources */,
+				3520CF24445AE778A68308AA /* VoiceStatusView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

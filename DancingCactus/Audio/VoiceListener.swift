@@ -9,10 +9,10 @@ final class VoiceListener {
     private(set) var state: State = .idle
 
     private let rmsStartThreshold: Float        = -20.0
-    private let rmsStopThreshold:  Float        = -35.0
-    private let silenceDuration:   TimeInterval = 1.2
+    private let rmsStopThreshold:  Float        = -30.0  // easier to detect silence
+    private let silenceDuration:   TimeInterval = 2.5    // 2.5s of quiet ends capture
     private let maxCaptureDuration: TimeInterval = 30.0
-    private let cooldownDuration:  TimeInterval = 0.5
+    private let cooldownDuration:  TimeInterval = 0.3
     private let pitchCents:        Float        = 400.0
 
     private let engine      = AVAudioEngine()

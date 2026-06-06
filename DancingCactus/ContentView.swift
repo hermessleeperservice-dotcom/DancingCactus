@@ -24,6 +24,11 @@ struct ContentView: View {
             )
 
             VStack {
+                // Voice status indicator at top
+                if !parrotMode.isActive {
+                    VoiceStatusView(state: voiceListener.state)
+                        .padding(.top, 60)
+                }
                 Spacer()
                 SongTitleView(song: musicPlayer.currentSong)
                     .padding(.bottom, 24)
