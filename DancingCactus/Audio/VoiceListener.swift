@@ -8,31 +8,43 @@ final class VoiceListener {
     enum State { case idle, capturing, playingBack, cooldown }
     private(set) var state: State = .idle
 
-    // MARK: - Config
-    private let rmsStartThreshold: Float  = -20.0  // dBFS to begin capture
-    private let rmsStopThreshold:  Float  = -35.0  // dBFS silence to end capture
+    private let rmsStartThreshold: Float        = -20.0
+    private let rmsStopThreshold:  Float        = -35.0
     private let silenceDuration:   TimeInterval = 0.4
     private let maxCaptureDuration: TimeInterval = 15.0
     private let cooldownDuration:  TimeInterval = 0.5
-    private let pitchCents:        Float  = 400.0
+    private let pitchCents:        Float        = 400.0
 
-    // MARK: - Engine
     private let engine      = AVAudioEngine()
     private let pitchEffect = AVAudioUnitTimePitch()
     private let playerNode  = AVAudioPlayerNode()
-    private var tapInstalled    = false
-    private var nodesConnected  = false
-    private var captureFormat: AVAudioFormat?   // set once real hardware format is known
+    private var tapInstalled = false
+    private var playbackFormat: AVAudioFormat!   // format used for both tap and playback chain
 
-    // MARK: - Capture state
     private var capturedBuffers: [AVAudioPCMBuffer] = []
     private var silenceStart:    Date?
     private var captureStart:    Date?
 
     init() {
+        pitchEffect.pitch = pitchCents
         engine.attach(playerNode)
         engine.attach(pitchEffect)
-        pitchEffect.pitch = pitchCents
+
+        // Determine connection format before starting.
+        // On a real device this returns the hardware format correctly.
+        // On simulator it may return sampleRate=0 — fall back to 44100/1ch
+        // (the tap will be skipped on simulator anyway since sr=0 post-start too).
+        let inputFmt = engine.inputNode.outputFormat(forBus: 0)
+        let fmt: AVAudioFormat
+        if inputFmt.sampleRate > 0 {
+            fmt = inputFmt
+        } else {
+            fmt = AVAudioFormat(commonFormat: .pcmFormatFloat32,
+                                sampleRate: 44100, channels: 1, interleaved: false)!
+        }
+        playbackFormat = fmt
+        engine.connect(playerNode, to: pitchEffect,           format: fmt)
+        engine.connect(pitchEffect, to: engine.mainMixerNode, format: fmt)
     }
 
     // MARK: - Public
@@ -46,23 +58,26 @@ final class VoiceListener {
             return
         }
 
-        // Determine the actual hardware input format NOW (after engine is running)
-        let hwFormat = engine.inputNode.outputFormat(forBus: 0)
-        guard hwFormat.sampleRate > 0, hwFormat.channelCount > 0 else {
-            print("VoiceListener: invalid input format sr=\(hwFormat.sampleRate) ch=\(hwFormat.channelCount), cannot install tap")
+        // After start, confirm/update the actual hardware format
+        let hwFmt = engine.inputNode.outputFormat(forBus: 0)
+        guard hwFmt.sampleRate > 0, hwFmt.channelCount > 0 else {
+            print("VoiceListener: no audio input available (sr=\(hwFmt.sampleRate))")
             return
         }
-        captureFormat = hwFormat
-        print("VoiceListener: hardware format sr=\(hwFormat.sampleRate) ch=\(hwFormat.channelCount)")
+        print("VoiceListener: started — hw format sr=\(hwFmt.sampleRate) ch=\(hwFmt.channelCount)")
 
-        // Wire playback chain with the SAME format the mic produces
-        if !nodesConnected {
-            engine.connect(playerNode, to: pitchEffect,          format: hwFormat)
-            engine.connect(pitchEffect, to: engine.mainMixerNode, format: hwFormat)
-            nodesConnected = true
+        // If hardware format differs from what we connected with, reconnect while running
+        // (AVAudioEngine supports live reconnection)
+        if hwFmt.sampleRate != playbackFormat.sampleRate ||
+           hwFmt.channelCount != playbackFormat.channelCount {
+            engine.disconnectNodeOutput(playerNode)
+            engine.connect(playerNode, to: pitchEffect,           format: hwFmt)
+            engine.connect(pitchEffect, to: engine.mainMixerNode, format: hwFmt)
+            playbackFormat = hwFmt
+            print("VoiceListener: reconnected nodes with hw format")
         }
 
-        installTap(format: hwFormat)
+        installTap(format: hwFmt)
     }
 
     func stop() {
@@ -78,15 +93,16 @@ final class VoiceListener {
 
     private func installTap(format: AVAudioFormat) {
         guard !tapInstalled else { return }
-        engine.inputNode.installTap(onBus: 0, bufferSize: 4096, format: format) { [weak self] buf, _ in
+        engine.inputNode.installTap(onBus: 0, bufferSize: 4096, format: format) {
+            [weak self] buf, _ in
             let rmsDB = buf.rmsDB()
             guard let copy = buf.safeCopy() else { return }
             Task { @MainActor [weak self] in
-                self?.process(rmsDB: rmsDB, buffer: copy, format: format)
+                self?.process(rmsDB: rmsDB, buffer: copy)
             }
         }
         tapInstalled = true
-        print("VoiceListener: tap installed")
+        print("VoiceListener: tap installed (format \(format.sampleRate)Hz \(format.channelCount)ch)")
     }
 
     private func removeTap() {
@@ -97,7 +113,7 @@ final class VoiceListener {
 
     // MARK: - State machine
 
-    private func process(rmsDB: Float, buffer: AVAudioPCMBuffer, format: AVAudioFormat) {
+    private func process(rmsDB: Float, buffer: AVAudioPCMBuffer) {
         switch state {
         case .idle:
             if rmsDB > rmsStartThreshold {
@@ -105,26 +121,21 @@ final class VoiceListener {
                 capturedBuffers = [buffer]
                 captureStart = Date()
                 silenceStart = nil
-                print("VoiceListener: capturing started (rms=\(rmsDB)dB)")
+                print("VoiceListener: capturing (rms=\(String(format:"%.1f",rmsDB))dB)")
             }
 
         case .capturing:
             capturedBuffers.append(buffer)
-
             if rmsDB < rmsStopThreshold {
                 if silenceStart == nil { silenceStart = Date() }
                 if let s = silenceStart, Date().timeIntervalSince(s) >= silenceDuration {
-                    print("VoiceListener: silence gap reached, triggering playback")
-                    triggerPlayback(format: format)
-                    return
+                    triggerPlayback(); return
                 }
             } else {
                 silenceStart = nil
             }
-
             if let s = captureStart, Date().timeIntervalSince(s) > maxCaptureDuration {
-                print("VoiceListener: max capture duration reached, triggering playback")
-                triggerPlayback(format: format)
+                triggerPlayback()
             }
 
         case .playingBack, .cooldown:
@@ -132,17 +143,14 @@ final class VoiceListener {
         }
     }
 
-    private func triggerPlayback(format: AVAudioFormat) {
+    private func triggerPlayback() {
         state = .playingBack
         removeTap()
         let buffers = capturedBuffers
-        capturedBuffers = []
-        silenceStart = nil
-        captureStart = nil
+        capturedBuffers = []; silenceStart = nil; captureStart = nil
 
-        guard let combined = mergeBuffers(buffers, format: format) else {
-            enterCooldown()
-            return
+        guard let combined = mergeBuffers(buffers, format: playbackFormat) else {
+            enterCooldown(); return
         }
         print("VoiceListener: playing back \(combined.frameLength) frames")
         playerNode.scheduleBuffer(combined, at: nil, options: []) { [weak self] in
@@ -157,9 +165,7 @@ final class VoiceListener {
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(self.cooldownDuration))
             self.state = .idle
-            if let fmt = self.captureFormat {
-                self.installTap(format: fmt)
-            }
+            self.installTap(format: self.playbackFormat)
         }
     }
 }
@@ -192,8 +198,8 @@ extension AVAudioPCMBuffer {
     }
 
     func safeCopy() -> AVAudioPCMBuffer? {
-        guard let copy = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCapacity) else { return nil }
-        guard let src = floatChannelData, let dst = copy.floatChannelData else { return nil }
+        guard let copy = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCapacity),
+              let src = floatChannelData, let dst = copy.floatChannelData else { return nil }
         for ch in 0..<Int(format.channelCount) {
             memcpy(dst[ch], src[ch], Int(frameLength) * MemoryLayout<Float>.size)
         }
