@@ -1,0 +1,49 @@
+name: DancingCactus
+options:
+  bundleIdPrefix: com.hermessleeperservice
+  deploymentTarget:
+    iOS: "17.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+    ENABLE_PREVIEWS: YES
+
+targets:
+  DancingCactus:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: DancingCactus
+        excludes:
+          - "Resources/**"
+    resources:
+      - path: DancingCactus/Resources
+    info:
+      path: DancingCactus/Info.plist
+      properties:
+        CFBundleDisplayName: Dancing Cactus
+        CFBundleName: DancingCactus
+        CFBundleIdentifier: com.hermessleeperservice.DancingCactus
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        LSRequiresIPhoneOS: true
+        UIRequiredDeviceCapabilities:
+          - armv7
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UILaunchScreen:
+          UIColorName: ""
+        NSMicrophoneUsageDescription: "Needed to listen and repeat your voice."
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations: {}
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.hermessleeperservice.DancingCactus
+    dependencies:
+      - sdk: AVFoundation.framework
