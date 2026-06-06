@@ -66,6 +66,11 @@ final class VoiceListener {
         guard !tapInstalled else { return }
         let inputNode = engine.inputNode
         let fmt = inputNode.outputFormat(forBus: 0)
+        // Guard against invalid format (no mic permission, or no audio input device)
+        guard fmt.sampleRate > 0, fmt.channelCount > 0 else {
+            print("VoiceListener: invalid input format (sampleRate=\(fmt.sampleRate) channels=\(fmt.channelCount)), skipping tap")
+            return
+        }
         inputNode.installTap(onBus: 0, bufferSize: 2048, format: fmt) { [weak self] buf, _ in
             let rmsDB = buf.rmsDB()
             let copy = buf.copy() as! AVAudioPCMBuffer
