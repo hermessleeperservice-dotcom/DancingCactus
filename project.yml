@@ -19,10 +19,6 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - path: DancingCactus
-        excludes:
-          - "Resources/**"
-    resources:
-      - path: DancingCactus/Resources
     info:
       path: DancingCactus/Info.plist
       properties:

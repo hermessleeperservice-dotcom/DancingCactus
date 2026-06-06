@@ -10,28 +10,50 @@
 		09B997D4C760D4E1F853F041 /* ParrotMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F9C1DE4262128D5E383DBA /* ParrotMode.swift */; };
 		1730EBE980DFBBB44DAA4D5D /* VoiceListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7DA314C68E55AA45474873 /* VoiceListener.swift */; };
 		1C1A9641A57C6118319A23BD /* ControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF65D094FCE104E55B568571 /* ControlsView.swift */; };
+		2B729AF931C77B5DC5350A17 /* songs.json in Resources */ = {isa = PBXBuildFile; fileRef = 9B00DDBC3526F4E2762EDE96 /* songs.json */; };
+		5553D0F1A99A9A85FEDE86BD /* song07.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 55FA8CDBD00F89585BD0A250 /* song07.mp3 */; };
 		5DC4775185A5CDFF6B83877C /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5AC4C3ED4E65CF099CC668 /* Song.swift */; };
+		5F273E96BC93536F3F9D7E07 /* song06.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 68930D0E1A69FFF7D7D34D5E /* song06.mp3 */; };
+		7469A7C8B2863562F281C3D2 /* song05.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 190115F2D22836E0E883F677 /* song05.mp3 */; };
+		7753842899872ADA4904D75C /* song03.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CFDAA0C4514B0B77C28ABC74 /* song03.mp3 */; };
+		8E640C85DC72D84456F258AB /* song09.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2C41F26E56F7FA0F725D5245 /* song09.mp3 */; };
+		94B8BDADB6DC7E474CA74E0B /* song01.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 70CA7C93BCEC675BC993E2C4 /* song01.mp3 */; };
 		94FC04696459BBCB44970036 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0878324B8C4929C6375EED /* ContentView.swift */; };
+		A69DC2CE0BA4D27EA74570D6 /* song04.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 09C67691B71863F5E9FB586D /* song04.mp3 */; };
 		ADDA9E889FF497C98CE56B32 /* CactusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069EA4EA59F72612059A016C /* CactusView.swift */; };
 		BECF76EC878C611B8BC4F8AD /* SongTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C0CE1A6662223AE202B554 /* SongTitleView.swift */; };
 		C762064DE8505D9DDB8A784F /* DancingCactusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F12B3588AB6C98E560018A0 /* DancingCactusApp.swift */; };
+		D81BFDDCECFC409DB045A7D6 /* song10.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F4A86BC5F6EB04FB426DBEC1 /* song10.mp3 */; };
 		DD8C9BE680C6DF5921D2B40B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F033E4A0DEF48A86B62BFD1B /* AVFoundation.framework */; };
+		DF237245D2F393B45A0CF975 /* song08.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = FA1D9F6624CC70CA49461DA5 /* song08.mp3 */; };
+		E8C4788115EC1889592AE767 /* song02.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1646F5AC6720F2F5D6D95528 /* song02.mp3 */; };
 		F017E8B083FA8FF63AF2ED14 /* MusicPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3B4F954F901F74FE81BA68 /* MusicPlayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		00227A7D8448784E2DC9DD5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		069EA4EA59F72612059A016C /* CactusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CactusView.swift; sourceTree = "<group>"; };
+		09C67691B71863F5E9FB586D /* song04.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song04.mp3; sourceTree = "<group>"; };
+		1646F5AC6720F2F5D6D95528 /* song02.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song02.mp3; sourceTree = "<group>"; };
+		190115F2D22836E0E883F677 /* song05.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song05.mp3; sourceTree = "<group>"; };
 		1E3B4F954F901F74FE81BA68 /* MusicPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicPlayer.swift; sourceTree = "<group>"; };
+		2C41F26E56F7FA0F725D5245 /* song09.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song09.mp3; sourceTree = "<group>"; };
 		4A5AC4C3ED4E65CF099CC668 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
 		55C0CE1A6662223AE202B554 /* SongTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongTitleView.swift; sourceTree = "<group>"; };
+		55FA8CDBD00F89585BD0A250 /* song07.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song07.mp3; sourceTree = "<group>"; };
+		68930D0E1A69FFF7D7D34D5E /* song06.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song06.mp3; sourceTree = "<group>"; };
+		70CA7C93BCEC675BC993E2C4 /* song01.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song01.mp3; sourceTree = "<group>"; };
 		7A0878324B8C4929C6375EED /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8F12B3588AB6C98E560018A0 /* DancingCactusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DancingCactusApp.swift; sourceTree = "<group>"; };
 		9635753D8DABEFDC0DD00038 /* DancingCactus.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DancingCactus.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B00DDBC3526F4E2762EDE96 /* songs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = songs.json; sourceTree = "<group>"; };
 		A0F9C1DE4262128D5E383DBA /* ParrotMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParrotMode.swift; sourceTree = "<group>"; };
+		CFDAA0C4514B0B77C28ABC74 /* song03.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song03.mp3; sourceTree = "<group>"; };
 		EB7DA314C68E55AA45474873 /* VoiceListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceListener.swift; sourceTree = "<group>"; };
 		EF65D094FCE104E55B568571 /* ControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsView.swift; sourceTree = "<group>"; };
 		F033E4A0DEF48A86B62BFD1B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		F4A86BC5F6EB04FB426DBEC1 /* song10.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song10.mp3; sourceTree = "<group>"; };
+		FA1D9F6624CC70CA49461DA5 /* song08.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = song08.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +76,23 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		179F377C45683E9D5D1F2C36 /* Songs */ = {
+			isa = PBXGroup;
+			children = (
+				70CA7C93BCEC675BC993E2C4 /* song01.mp3 */,
+				1646F5AC6720F2F5D6D95528 /* song02.mp3 */,
+				CFDAA0C4514B0B77C28ABC74 /* song03.mp3 */,
+				09C67691B71863F5E9FB586D /* song04.mp3 */,
+				190115F2D22836E0E883F677 /* song05.mp3 */,
+				68930D0E1A69FFF7D7D34D5E /* song06.mp3 */,
+				55FA8CDBD00F89585BD0A250 /* song07.mp3 */,
+				FA1D9F6624CC70CA49461DA5 /* song08.mp3 */,
+				2C41F26E56F7FA0F725D5245 /* song09.mp3 */,
+				F4A86BC5F6EB04FB426DBEC1 /* song10.mp3 */,
+			);
+			path = Songs;
+			sourceTree = "<group>";
+		};
 		39838E2A74C08EBB51998ABF /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -70,6 +109,15 @@
 				EB7DA314C68E55AA45474873 /* VoiceListener.swift */,
 			);
 			path = Audio;
+			sourceTree = "<group>";
+		};
+		AEC3280997496EA1C7C71CAA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9B00DDBC3526F4E2762EDE96 /* songs.json */,
+				179F377C45683E9D5D1F2C36 /* Songs */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		B20B0F1054E7637412E9C168 = {
@@ -97,6 +145,7 @@
 				00227A7D8448784E2DC9DD5F /* Info.plist */,
 				7952F7B4F1BF52CF7670E6D4 /* Audio */,
 				099A0857ECB4728879DBF844 /* Models */,
+				AEC3280997496EA1C7C71CAA /* Resources */,
 				EDF954608DC66A38B84CB502 /* Views */,
 			);
 			path = DancingCactus;
@@ -120,6 +169,7 @@
 			buildConfigurationList = AD3CC7272E9A7CC273DA3490 /* Build configuration list for PBXNativeTarget "DancingCactus" */;
 			buildPhases = (
 				4A583CAB465F845D4AB12451 /* Sources */,
+				63B3913E1621E5801742B7DD /* Resources */,
 				D756E89D1E2249CCE1595B7D /* Frameworks */,
 			);
 			buildRules = (
@@ -162,6 +212,27 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		63B3913E1621E5801742B7DD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				94B8BDADB6DC7E474CA74E0B /* song01.mp3 in Resources */,
+				E8C4788115EC1889592AE767 /* song02.mp3 in Resources */,
+				7753842899872ADA4904D75C /* song03.mp3 in Resources */,
+				A69DC2CE0BA4D27EA74570D6 /* song04.mp3 in Resources */,
+				7469A7C8B2863562F281C3D2 /* song05.mp3 in Resources */,
+				5F273E96BC93536F3F9D7E07 /* song06.mp3 in Resources */,
+				5553D0F1A99A9A85FEDE86BD /* song07.mp3 in Resources */,
+				DF237245D2F393B45A0CF975 /* song08.mp3 in Resources */,
+				8E640C85DC72D84456F258AB /* song09.mp3 in Resources */,
+				D81BFDDCECFC409DB045A7D6 /* song10.mp3 in Resources */,
+				2B729AF931C77B5DC5350A17 /* songs.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4A583CAB465F845D4AB12451 /* Sources */ = {
